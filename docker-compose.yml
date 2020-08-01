@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  # create web service and run uvicorn with flags
+  web:
+    build: ./backend
+    # single worker process
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    # used to mount code into container
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - 8002:8000
+    environment:
+      - ENVIRONMENT=dev
+      - TESTING=0
+
+  web-db:
+    build:
+      context: ./backend/db
+      dockerfile: Dockerfile
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
