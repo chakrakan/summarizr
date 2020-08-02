@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
   # create web service and run uvicorn with flags
@@ -10,10 +10,15 @@ services:
     volumes:
       - ./backend:/usr/src/app
     ports:
+      # host:container
       - 8002:8000
     environment:
       - ENVIRONMENT=dev
       - TESTING=0
+      - DATABASE_URL=postgres://postgres:postgres@web-db:5432/web_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@web-db:5432/web_test
+    depends_on:
+      - web-db
 
   web-db:
     build:
