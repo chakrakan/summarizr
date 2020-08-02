@@ -2,3 +2,4 @@ env
 __pycache__
 .vscode
 backend/.idea
+.DS_Store
