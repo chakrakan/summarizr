@@ -3,18 +3,25 @@
 import logging
 from fastapi import FastAPI
 from app.db import init_db
-from app.api import ping
+from app.api import ping, summaries
 
 log = logging.getLogger(__name__)
 
 
 def create_application() -> FastAPI:
+    """
+    Create the FastAPI application, add the routes using the router for ping, summaries
+    :return: fastAPI app
+    """
     application = FastAPI()
     application.include_router(ping.router)
+    # the tags is for the OpenAPI schema for grouping operations
+    application.include_router(summaries.router, prefix="/summaries", tags=["summaries"])
 
     return application
 
 
+# instantiate
 app = create_application()
 
 
