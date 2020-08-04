@@ -3,12 +3,12 @@ version: "3.8"
 services:
   # create web service and run uvicorn with flags
   web:
-    build: project
+    build: ./project
     # single worker process
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     # used to mount code into container
     volumes:
-      - ./project:/usr/src/app
+      - ./project:/usr/src/app:delegated
     ports:
       # host:container
       - 8002:8000
@@ -17,12 +17,11 @@ services:
       - TESTING=0
       - DATABASE_URL=postgres://postgres:postgres@web-db:5432/web_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@web-db:5432/web_test
-    depends_on:
-      - web-db
+
 
   web-db:
     build:
-      context: project/db
+      context: ./project/db
       dockerfile: Dockerfile
     expose:
       - 5432

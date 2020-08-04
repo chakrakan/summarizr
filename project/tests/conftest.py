@@ -3,8 +3,8 @@
 import os
 import pytest
 from starlette.testclient import TestClient
-from project.app import main
-from project.app.config import get_settings, Settings
+from app.main import create_application
+from app.config import get_settings, Settings
 
 
 def get_settings_override():
@@ -25,8 +25,9 @@ def test_app():
     value: get_settings_override (what we'd like to override the dependency with)
     """
     # set up
-    main.app.dependency_overrides[get_settings] = get_settings_override
-    with TestClient(main.app) as test_client:
+    app = create_application()
+    app.dependency_overrides[get_settings] = get_settings_override
+    with TestClient(app) as test_client:
         # testing
         yield test_client
     # tear down

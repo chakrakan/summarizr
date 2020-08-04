@@ -2,11 +2,9 @@
 
 import logging
 import os
-from dotenv import load_dotenv
 from pydantic import BaseSettings, AnyUrl
 from functools import lru_cache
 
-load_dotenv()
 log = logging.getLogger(__name__)
 
 
