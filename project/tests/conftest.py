@@ -1,10 +1,10 @@
-# backend/tests/conftest.py
+# project/tests/conftest.py
 
 import os
 import pytest
 from starlette.testclient import TestClient
-from ..app import main
-from ..app.config import get_settings, Settings
+from project.app import main
+from project.app.config import get_settings, Settings
 
 
 def get_settings_override():

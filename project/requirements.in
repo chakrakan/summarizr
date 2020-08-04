@@ -5,3 +5,4 @@ newspaper3k
 requests
 tortoise-orm
 uvicorn
+pytest

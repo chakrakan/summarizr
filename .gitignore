@@ -1,6 +1,7 @@
 env
 __pycache__
 .vscode
-backend/.idea
+project/.idea
 .DS_Store
 .idea
+.pytest_cache
