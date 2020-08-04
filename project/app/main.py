@@ -1,26 +1,35 @@
 # project/app/main.py
 
-import os
+import logging
 from fastapi import FastAPI
-from tortoise.contrib.fastapi import register_tortoise
+from app.db import init_db
 from app.api import ping
+
+log = logging.getLogger(__name__)
 
 
 def create_application() -> FastAPI:
     application = FastAPI()
-
-    # set up tortoise ORM on startup and clean up on teardown
-    register_tortoise(
-        application,
-        db_url=os.environ.get("DATABASE_URL"),
-        modules={"models": ["app.models.tortoise"]},
-        generate_schemas=True,
-        add_exception_handlers=True
-    )
-
     application.include_router(ping.router)
 
     return application
 
 
 app = create_application()
+
+
+@app.on_event("startup")
+async def startup_event():
+    """
+    Start up handler
+    """
+    log.info("Starting up...")
+    init_db(app)
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """
+    Shutdown handler
+    """
+    log.info("Shutting down...")
