@@ -1,8 +1,10 @@
 # project/app/api/summaries.py
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
+
 from app.api import crud
 from app.models.pydantic import SummaryPayloadSchema, SummaryResponseSchema
+from app.models.tortoise import SummarySchema
 
 router = APIRouter()
 
@@ -10,14 +12,7 @@ router = APIRouter()
 @router.post("/", response_model=SummaryResponseSchema, status_code=201)
 async def create_summary(payload: SummaryPayloadSchema) -> SummaryResponseSchema:
     """
-    Handler to expect payload with a URL. When route is hit with POST req, FastAPI will read the body and validate the
-    data:
-        - if valid, data will be available in the payload param. FastAPI also created the JSON schema to gereante the
-        OpenAPI schema and docs
-        - if invalid, error is returned
-    We use async declaration since db communication is async and there are no blocking I/O ops in the handler
-    :param payload: payload object with URL info
-    :return: response
+    Handler to create a summary for a given website
     """
     summary_id = await crud.post(payload)
     resp_obj = {
@@ -25,3 +20,9 @@ async def create_summary(payload: SummaryPayloadSchema) -> SummaryResponseSchema
         "url": payload.url
     }
     return resp_obj
+
+
+@router.get("/{id}/", response_model=SummarySchema)
+async def read_summary(summary_id: int) -> SummaryScehma:
+    summary = await crud.get(summary_id)
+    return summary
